@@ -54,6 +54,7 @@
   <depend>geometry_msgs</depend>
   <depend>tag_pose_controller</depend>
   <depend>message_generation</depend>
+  <depend>eigen</depend>
 
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>roscpp</build_depend>

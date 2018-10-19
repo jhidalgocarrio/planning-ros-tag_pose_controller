@@ -12,10 +12,11 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   message_generation
   tag_pose_controller
+  tf
 )
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
-
+find_package(Eigen3 REQUIRED)
 
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
@@ -105,7 +106,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES tag_pose_controller
-  CATKIN_DEPENDS roscpp std_msgs message_generation
+  CATKIN_DEPENDS roscpp std_msgs message_generation tf
   DEPENDS system_lib
 )
 
@@ -118,16 +119,8 @@ catkin_package(
 include_directories(
   include
   ${catkin_INCLUDE_DIRS}
-
+  ${Eigen3_INCLUDE_DIRS}
 )
-
-message("!!!!!!!!!!!!!!!!!!!!!!!"${catkin_INCLUDE_DIRS}
-)
-## Declare a C++ library
-# add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/tag_pose_controller.cpp
-#   src/${PROJECT_NAME}/PID.cpp
-# )
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
@@ -153,7 +146,8 @@ msg_pkg_generate_messages_cpp)
 ## Specify libraries to link a library or executable target against
  target_link_libraries(${PROJECT_NAME}
    ${catkin_LIBRARIES}
-   #${PROJECT_NAME}
+   ${Eigen3_LIBRARIES} 
+  #${PROJECT_NAME}
    tag_pose_controller
  )
 
