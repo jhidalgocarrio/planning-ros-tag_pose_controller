@@ -1,6 +1,7 @@
 #include <tag_pose_controller_ros/tag_pose_controller_ros.h>
 
-#define DEBUG_INFO
+//#define DEBUG_HEADING_INFO
+#define DEBUG_DISTANCE_INFO
 
 void TagPoseControllerNode::TagPoseCallBack(const apriltags2_ros::AprilTagDetectionArray::ConstPtr& msg)
 {
@@ -26,7 +27,7 @@ void TagPoseControllerNode::TagPoseCallBack(const apriltags2_ros::AprilTagDetect
     double roll,pitch,yaw;
     rotation_matrix.getRPY(roll,pitch,yaw);
 
-#ifdef DEBUG_INFO
+#ifdef DEBUG_HEADING_INFO
     ROS_INFO("roll: %f pitch: %f yaw: %f", roll,pitch,yaw);
 #endif
 
@@ -36,18 +37,34 @@ void TagPoseControllerNode::TagPoseCallBack(const apriltags2_ros::AprilTagDetect
     controller_.setLastDetectedPose(position, rotation);
 
     controller_.calculateDistance();
-    double distance = controller_.getDistance();
-#ifdef DEBUG_INFO
-    ROS_INFO("Distance from base_link is: %f", distance);
+    double measured_distance = controller_.getDistance();
+    double  desired_distance = 1.3;
+    double control_signal = 0.0;
+    controller_.calculatePidOutput(control_signal, desired_distance, measured_distance);
+
+#ifdef DEBUG_DISTANCE_INFO
+    ROS_INFO("Measured distance: %f", measured_distance);
+    ROS_INFO("Desired distance: %f", desired_distance);
+    ROS_INFO("Control signal: %f", control_signal);
 #endif
+
+    cmd_vel.linear.x  = control_signal;
+    cmd_vel.linear.y  = 0.0;
+    cmd_vel.linear.z  = 0.0;
+    cmd_vel.angular.x = 0.0;
+    cmd_vel.angular.y = 0.0;
+    cmd_vel.angular.z = 0.0;
+
+    cmd_vel_publisher_.publish(cmd_vel);
+
 }
     else{
       ROS_INFO("No Tag Detected");
     }
 }
 
-TagPoseControllerNode::TagPoseControllerNode(std::string ns) :
- private_nh("~/"+ns)
+TagPoseControllerNode::TagPoseControllerNode() :
+ private_nh("")
 {     try{
     now = ros::Time(0);
     listener.waitForTransform("dory/base_link", "dory/camera_link",now, ros::Duration(10));
@@ -66,6 +83,8 @@ TagPoseControllerNode::TagPoseControllerNode(std::string ns) :
     private_nh.param("sampling_time", sampling_time_, 0.1);
     private_nh.param("scaling_factor", scaling_factor_, 1.0);
 
+    ROS_INFO("SAMPLING TIME: %f", sampling_time_);
+
     controller_.setParams(Kp_, Ki_, Kd_, upper_, lower_, sampling_time_, scaling_factor_);
 
 }
@@ -75,6 +94,7 @@ TagPoseControllerNode::~TagPoseControllerNode(){}
 bool TagPoseControllerNode::spin(){
 
     tag_pose_subscriber =  private_nh.subscribe("/tag_detections", 1000, &TagPoseControllerNode::TagPoseCallBack, this );
+    cmd_vel_publisher_   =  private_nh.advertise<geometry_msgs::Twist>("cmd_vel", 10);
 
     while (private_nh.ok())
     {
@@ -91,9 +111,8 @@ int main(int argc, char **argv)
 
     ros::init(argc,argv,"tag_pose_controller_node");
  
-    std::string ns = "visual_servoing";
      
-    TagPoseControllerNode node(ns);
+    TagPoseControllerNode node;
 
     node.spin();
 
