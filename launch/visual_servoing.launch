@@ -1,0 +1,4 @@
+<launch>
+    <rosparam file="$(find tag_pose_controller_ros)/launch/pid_params.yaml" command="load"/>
+    <node pkg="tag_pose_controller_ros" type="tag_pose_controller_ros" name="tag_pose_controller_ros"/>
+</launch>
