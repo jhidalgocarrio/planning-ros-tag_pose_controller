@@ -14,7 +14,7 @@ class TagPoseControllerNode {
 
 public:
 
-    TagPoseControllerNode();
+    TagPoseControllerNode(std::string ns);
     ~TagPoseControllerNode();
     void TagPoseCallBack(const apriltags2_ros::AprilTagDetectionArray::ConstPtr& msg);
     bool spin();
@@ -24,10 +24,11 @@ private:
     tf::StampedTransform cam_in_base;
     tf::Pose tf_pose_in;
     tf::Pose tf_pose_out;
-    ros::NodeHandle node_;
-    TagPoseController controller;
+    ros::NodeHandle private_nh;
+    TagPoseController controller_;
     ros::Subscriber tag_pose_subscriber;
     ros::Time now;
+    double Kp_, Ki_, Kd_, upper_, lower_, sampling_time_, scaling_factor_;
 };
 
 
