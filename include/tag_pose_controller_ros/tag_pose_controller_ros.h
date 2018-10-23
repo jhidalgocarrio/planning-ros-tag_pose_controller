@@ -9,8 +9,7 @@
 #include <geometry_msgs/Pose.h>
 #include <geometry_msgs/Twist.h>
 #include <eigen3/Eigen/Core>
-
-
+#include <cmath>
 class TagPoseControllerNode {
 
 public:
@@ -33,10 +32,16 @@ private:
     ros::Time now;
 
     //controller specific
-    TagPoseController controller_;
+    TagPoseController controller_linear_;
+    TagPoseController controller_angular_;
 
     //controller parameters from Parameter Server
     double Kp_, Ki_, Kd_, upper_, lower_, sampling_time_, scaling_factor_;
+    double Kp_ang_, Ki_ang_, Kd_ang_, upper_ang_, lower_ang_, sampling_time_ang_, scaling_factor_ang_;
+
+    //user defined setpoints
+    double desired_distance_;
+    double desired_angle_;
 
     //output
     geometry_msgs::Twist cmd_vel;
