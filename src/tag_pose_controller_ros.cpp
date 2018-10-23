@@ -5,38 +5,33 @@
 
 void TagPoseControllerNode::TagPoseCallBack(const apriltags2_ros::AprilTagDetectionArray::ConstPtr& msg)
 {
-    apriltags2_ros::AprilTagDetection  test;
+    apriltags2_ros::AprilTagDetection  last_detected_tag;
     if (!msg->detections.empty()){
-    test = msg->detections.back();
+    last_detected_tag = msg->detections.back();
 
     geometry_msgs::Pose tag_in_camera;
-
     geometry_msgs::Pose tag_in_base;
+    tag_in_camera= last_detected_tag.pose.pose.pose;
 
-    double translation_x,translation_y,translation_z;
+    tf::poseMsgToTF(tag_in_camera, tf_pose_in);
+    tf_pose_out = cam_in_base * tf_pose_in;
+    tf::poseTFToMsg(tf_pose_out, tag_in_base);
 
-    tag_in_camera= test.pose.pose.pose;
-
-    double theta_x_axis = atan2(tag_in_camera.position.z , tag_in_camera.position.x );
-
+    double theta_x_axis = atan2(tag_in_camera.position.z , tag_in_camera.position.x);
     int mult = 1;
-
     if (theta_x_axis < 0)
     {
     mult = -1;
     }
+    /*
+    First quadrant:  heading_z_axis: 1.5708 - heading_x_axis
+    Second quadrant: heading_z_axis: heading_x_axis - 1.5708
+    */
 
     double heading_z_axis = mult * (1.5708 - theta_x_axis);
 
-    tf::poseMsgToTF(tag_in_camera, tf_pose_in);
-
-    tf_pose_out = cam_in_base * tf_pose_in;
-
-    tf::poseTFToMsg(tf_pose_out, tag_in_base);
-
-
     Eigen::Vector3d position(tag_in_base.position.x, tag_in_base.position.y, tag_in_base.position.z);
-    controller_linear_.setLastDetectedPose(position);
+    controller_linear_.setLastDetectedPosition(position);
     controller_linear_.calculateDistance();
 
     double measured_distance = controller_linear_.getDistance();
