@@ -1,6 +1,6 @@
 <launch>
   <group ns="dory">
-    <rosparam file="$(find tag_pose_controller_ros)/launch/pid_params.yaml" command="load"/>
-    <node pkg="tag_pose_controller_ros" type="tag_pose_controller_ros" name="tag_pose_controller_ros" output="screen"/>
+    <rosparam file="$(find tag_pose_controller_node)/launch/pid_params.yaml" command="load"/>
+    <node pkg="tag_pose_controller_node" type="tag_pose_controller_node" name="tag_pose_controller_node" output="screen"/>
   </group>
 </launch>
