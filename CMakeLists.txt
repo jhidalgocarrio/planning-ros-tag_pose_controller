@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(tag_pose_controller_ros)
+project(tag_pose_controller_node)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
  add_compile_options(-std=c++11)
@@ -127,10 +127,9 @@ include_directories(
 ## either from message generation or dynamic reconfigure
 # add_dependencies(${PROJECT_NAME} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} msg_pkg_generate_messages_cpp)
 
-## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
- add_executable(${PROJECT_NAME} src/tag_pose_controller_ros.cpp)
+ add_executable(${PROJECT_NAME} src/tag_pose_controller_node.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -148,7 +147,7 @@ msg_pkg_generate_messages_cpp)
    ${catkin_LIBRARIES}
    ${Eigen3_LIBRARIES} 
   #${PROJECT_NAME}
-   tag_pose_controller
+   ${tag_pose_controller_LIBRARIES}
  )
 
 #############
