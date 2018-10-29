@@ -1,5 +1,5 @@
-#ifndef TAG_POSE_CONTROLLER_ROS_H
-#define TAG_POSE_CONTROLLER_ROS_H
+#ifndef TAG_POSE_CONTROLLER_NODE_H
+#define TAG_POSE_CONTROLLER_NODE_H
 
 #include <ros/ros.h>
 #include <tag_pose_controller/tag_pose_controller.h>

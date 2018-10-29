@@ -1,4 +1,4 @@
-#include <tag_pose_controller_ros/tag_pose_controller_ros.h>
+#include <tag_pose_controller_node/tag_pose_controller_node.h>
 
 #define DEBUG_HEADING_INFO
 #define DEBUG_DISTANCE_INFO
