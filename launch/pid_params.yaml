@@ -11,8 +11,8 @@ scaling_factor: 1.0
 Kp_gain_ang: 0.5
 Ki_gain_ang: 0.0
 Kd_gain_ang: 0.01
-upper_limit_ang: 0.176
-lower_limit_ang: -0.176
+upper_limit_ang: 0.0174
+lower_limit_ang: -0.0174
 sampling_time_ang: 0.1
 scaling_factor_ang: 1.0
 
