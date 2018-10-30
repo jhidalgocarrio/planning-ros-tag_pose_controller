@@ -13,9 +13,9 @@ void TagPoseControllerNode::TagPoseCallBack(const apriltags2_ros::AprilTagDetect
     geometry_msgs::Pose tag_in_base;
     tag_in_camera= last_detected_tag.pose.pose.pose;
 
-    tf::poseMsgToTF(tag_in_camera, tf_pose_in);
-    tf_pose_out = cam_in_base * tf_pose_in;
-    tf::poseTFToMsg(tf_pose_out, tag_in_base);
+    tf::poseMsgToTF(tag_in_camera, tf_pose_in_);
+    tf_pose_out_ = cam_in_base_ * tf_pose_in_;
+    tf::poseTFToMsg(tf_pose_out_, tag_in_base);
 
     double theta_x_axis = atan2(tag_in_camera.position.z , tag_in_camera.position.x);
     int mult = 1;
@@ -81,35 +81,35 @@ void TagPoseControllerNode::TagPoseCallBack(const apriltags2_ros::AprilTagDetect
 }
 
 TagPoseControllerNode::TagPoseControllerNode() :
- private_nh("")
+ private_nh_("")
 {     try{
-    now = ros::Time(0);
-    listener.waitForTransform("dory/base_link", "dory/camera_link",now, ros::Duration(10));
-    listener.lookupTransform("dory/base_link", "dory/camera_link", now, cam_in_base);
+    now_ = ros::Time(0);
+    listener_.waitForTransform("dory/base_link", "dory/camera_link",now_, ros::Duration(10));
+    listener_.lookupTransform("dory/base_link", "dory/camera_link", now_, cam_in_base_);
     }
         catch (tf::TransformException &ex) {
       ROS_ERROR("%s",ex.what());
       ros::Duration(1.0).sleep();
     }
 
-    private_nh.param("Kp_gain", Kp_, 0.01);
-    private_nh.param("Ki_gain", Ki_, 0.01);
-    private_nh.param("Kd_gain", Kd_, 0.0);
-    private_nh.param("upper_limit", upper_, 1.0);
-    private_nh.param("lower_limit", lower_, 1.0);
-    private_nh.param("sampling_time", sampling_time_, 0.1);
-    private_nh.param("scaling_factor", scaling_factor_, 1.0);
+    private_nh_.param("Kp_gain", Kp_, 0.01);
+    private_nh_.param("Ki_gain", Ki_, 0.01);
+    private_nh_.param("Kd_gain", Kd_, 0.0);
+    private_nh_.param("upper_limit", upper_, 1.0);
+    private_nh_.param("lower_limit", lower_, 1.0);
+    private_nh_.param("sampling_time", sampling_time_, 0.1);
+    private_nh_.param("scaling_factor", scaling_factor_, 1.0);
 
-    private_nh.param("Kp_gain_ang", Kp_ang_, 0.01);
-    private_nh.param("Ki_gain_ang", Ki_ang_, 0.01);
-    private_nh.param("Kd_gain_ang", Kd_ang_, 0.0);
-    private_nh.param("upper_limit_ang", upper_ang_, 0.176);
-    private_nh.param("lower_limit_ang", lower_ang_, -0.176);
-    private_nh.param("sampling_time_ang", sampling_time_ang_, 0.1);
-    private_nh.param("scaling_factor_ang", scaling_factor_ang_, 1.0);
+    private_nh_.param("Kp_gain_ang", Kp_ang_, 0.01);
+    private_nh_.param("Ki_gain_ang", Ki_ang_, 0.01);
+    private_nh_.param("Kd_gain_ang", Kd_ang_, 0.0);
+    private_nh_.param("upper_limit_ang", upper_ang_, 0.176);
+    private_nh_.param("lower_limit_ang", lower_ang_, -0.176);
+    private_nh_.param("sampling_time_ang", sampling_time_ang_, 0.1);
+    private_nh_.param("scaling_factor_ang", scaling_factor_ang_, 1.0);
 
-    private_nh.param("desired_distance", desired_distance_, 1.3);
-    private_nh.param("desired_angle", desired_angle_, 0.0);
+    private_nh_.param("desired_distance", desired_distance_, 1.3);
+    private_nh_.param("desired_angle", desired_angle_, 0.0);
 
     controller_linear_.setParams(Kp_, Ki_, Kd_, upper_, lower_, sampling_time_, scaling_factor_);
     controller_angular_.setParams(Kp_ang_, Ki_ang_, Kd_ang_, upper_ang_, lower_ang_, sampling_time_ang_, scaling_factor_ang_);
@@ -120,29 +120,22 @@ TagPoseControllerNode::~TagPoseControllerNode(){}
 
 bool TagPoseControllerNode::spin(){
 
-    tag_pose_subscriber =  private_nh.subscribe("/tag_detections", 1000, &TagPoseControllerNode::TagPoseCallBack, this );
-    cmd_vel_publisher_   =  private_nh.advertise<geometry_msgs::Twist>("cmd_vel", 10);
+    tag_pose_subscriber_ =  private_nh_.subscribe("/tag_detections", 1000, &TagPoseControllerNode::TagPoseCallBack, this );
+    cmd_vel_publisher_   =  private_nh_.advertise<geometry_msgs::Twist>("cmd_vel", 10);
 
-    while (private_nh.ok())
+    while (private_nh_.ok())
     {
       ros::spinOnce();
     }
 
     ROS_INFO("Exit Success");
     return true;
-
 }
 
 int main(int argc, char **argv)
 {
-
     ros::init(argc,argv,"tag_pose_controller_node");
-
-
     TagPoseControllerNode node;
-
     node.spin();
-
     return EXIT_SUCCESS;
-
 }

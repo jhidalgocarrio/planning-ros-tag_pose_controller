@@ -22,14 +22,14 @@ public:
 private:
 
     //ros specific
-    tf::TransformListener listener;
-    tf::StampedTransform cam_in_base;
-    tf::Pose tf_pose_in;
-    tf::Pose tf_pose_out;
-    ros::NodeHandle private_nh;
-    ros::Subscriber tag_pose_subscriber;
+    tf::TransformListener listener_;
+    tf::StampedTransform cam_in_base_;
+    tf::Pose tf_pose_in_;
+    tf::Pose tf_pose_out_;
+    ros::NodeHandle private_nh_;
+    ros::Subscriber tag_pose_subscriber_;
     ros::Publisher  cmd_vel_publisher_;
-    ros::Time now;
+    ros::Time now_;
 
     //controller specific
     TagPoseController controller_linear_;
