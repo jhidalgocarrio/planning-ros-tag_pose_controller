@@ -58,18 +58,25 @@ void TagPoseControllerNode::TagPoseCallBack(const apriltags2_ros::AprilTagDetect
     ROS_INFO("Control signal angular: %f", control_signal_angular);
 #endif
 
-    cmd_vel.linear.x  = control_signal_linear;
-    cmd_vel.linear.y  = 0.0;
-    cmd_vel.linear.z  = 0.0;
-    cmd_vel.angular.x = 0.0;
-    cmd_vel.angular.y = 0.0;
-    cmd_vel.angular.z = control_signal_angular;
+    cmd_vel_.linear.x  = control_signal_linear;
+    cmd_vel_.linear.y  = 0.0;
+    cmd_vel_.linear.z  = 0.0;
+    cmd_vel_.angular.x = 0.0;
+    cmd_vel_.angular.y = 0.0;
+    cmd_vel_.angular.z = control_signal_angular;
 
-    cmd_vel_publisher_.publish(cmd_vel);
+    cmd_vel_publisher_.publish(cmd_vel_);
 
 }
     else{
-      ROS_INFO("No Tag Detected");
+
+    ROS_INFO("No Tag Detected");
+    cmd_vel_.linear.x  = 0.0;
+    cmd_vel_.linear.y  = 0.0;
+    cmd_vel_.linear.z  = 0.0;
+    cmd_vel_.angular.x = 0.0;
+    cmd_vel_.angular.y = 0.0;
+    cmd_vel_.angular.z = 0.0;
     }
 }
 
@@ -84,7 +91,7 @@ TagPoseControllerNode::TagPoseControllerNode() :
       ROS_ERROR("%s",ex.what());
       ros::Duration(1.0).sleep();
     }
-    
+
     private_nh.param("Kp_gain", Kp_, 0.01);
     private_nh.param("Ki_gain", Ki_, 0.01);
     private_nh.param("Kd_gain", Kd_, 0.0);
@@ -130,8 +137,8 @@ int main(int argc, char **argv)
 {
 
     ros::init(argc,argv,"tag_pose_controller_node");
- 
-     
+
+
     TagPoseControllerNode node;
 
     node.spin();

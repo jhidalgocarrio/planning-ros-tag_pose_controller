@@ -44,7 +44,7 @@ private:
     double desired_angle_;
 
     //output
-    geometry_msgs::Twist cmd_vel;
+    geometry_msgs::Twist cmd_vel_;
 
 };
 
