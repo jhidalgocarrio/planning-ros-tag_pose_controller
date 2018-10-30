@@ -121,7 +121,7 @@ TagPoseControllerNode::~TagPoseControllerNode(){}
 bool TagPoseControllerNode::spin(){
 
     tag_pose_subscriber_ =  private_nh_.subscribe("/tag_detections", 1000, &TagPoseControllerNode::TagPoseCallBack, this );
-    cmd_vel_publisher_   =  private_nh_.advertise<geometry_msgs::Twist>("cmd_vel", 10);
+    cmd_vel_publisher_   =  private_nh_.advertise<geometry_msgs::Twist>("spacenav/cmd_vel", 10);
 
     while (private_nh_.ok())
     {
