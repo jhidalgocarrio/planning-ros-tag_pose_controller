@@ -2,20 +2,20 @@
 Kp_gain: 2.0
 Ki_gain: 0.0
 Kd_gain: 0.01
-upper_limit: 1.0
-lower_limit: -1.0
+upper_limit: 0.5 #1.0
+lower_limit: -0.5 #-1.0
 sampling_time: 0.1
 scaling_factor: 1.0
 
 #heading controller parameters
-Kp_gain_ang: 0.5
+Kp_gain_ang: 1.0
 Ki_gain_ang: 0.0
 Kd_gain_ang: 0.01
-upper_limit_ang: 0.0174
-lower_limit_ang: -0.0174
+upper_limit_ang: 1.0 #0.174
+lower_limit_ang: -1.0 #-0.174
 sampling_time_ang: 0.1
 scaling_factor_ang: 1.0
 
 #common parameters
 desired_distance: 1.5
-desired_angle: 0.1
+desired_angle: 0.0 #0.1
