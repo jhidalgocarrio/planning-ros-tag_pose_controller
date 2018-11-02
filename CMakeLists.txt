@@ -12,6 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   message_generation
   tag_pose_controller
+  apriltags2_ros
   tf
 )
 ## System dependencies are found with CMake's conventions
@@ -106,7 +107,7 @@ find_package(Eigen3 REQUIRED)
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES tag_pose_controller
-  CATKIN_DEPENDS roscpp std_msgs message_generation tf
+  CATKIN_DEPENDS roscpp std_msgs message_generation tf apriltags2_ros
   DEPENDS system_lib
 )
 
