@@ -25,7 +25,7 @@ void TagPoseControllerNode::TagPoseCallBack(const apriltags2_ros::AprilTagDetect
     }
     /*
     First quadrant:  heading_z_axis: 1.5708 - heading_x_axis
-    Second quadrant: heading_z_axis: heading_x_axis - 1.5708
+    Second quadrant: heading_z_axis: heading_x_axis - 1.5708 (90 deg in rad)
     */
 
     double heading_z_axis = mult * (1.5708 - theta_x_axis);
@@ -58,14 +58,30 @@ void TagPoseControllerNode::TagPoseCallBack(const apriltags2_ros::AprilTagDetect
     ROS_INFO("Control signal angular: %f", control_signal_angular);
 #endif
 
-    cmd_vel_.linear.x  = control_signal_linear;
-    cmd_vel_.linear.y  = 0.0;
-    cmd_vel_.linear.z  = 0.0;
-    cmd_vel_.angular.x = 0.0;
-    cmd_vel_.angular.y = 0.0;
-    cmd_vel_.angular.z = control_signal_angular;
+	if (fabs(measured_distance - desired_distance_) < 0.1)
+	{
 
-    cmd_vel_publisher_.publish(cmd_vel_);
+	    ROS_INFO("Tag Within %f Range", fabs(measured_distance - desired_distance_));
+	    cmd_vel_.linear.x  = 0.0;
+	    cmd_vel_.linear.y  = 0.0;
+	    cmd_vel_.linear.z  = 0.0;
+	    cmd_vel_.angular.x = 0.0;
+	    cmd_vel_.angular.y = 0.0;
+	    cmd_vel_.angular.z = 0.0;
+	}
+	else
+	{
+	 
+	    ROS_INFO("Tag OUT of Range");
+		cmd_vel_.linear.x  = control_signal_linear;
+		cmd_vel_.linear.y  = 0.0;
+   		cmd_vel_.linear.z  = 0.0;
+    		cmd_vel_.angular.x = 0.0;
+   	 	cmd_vel_.angular.y = 0.0;
+    		cmd_vel_.angular.z = control_signal_angular;
+
+    		cmd_vel_publisher_.publish(cmd_vel_);
+	}
 
 }
     else{
