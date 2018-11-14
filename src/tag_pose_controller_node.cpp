@@ -100,8 +100,8 @@ TagPoseControllerNode::TagPoseControllerNode() :
  private_nh_("")
 {     try{
     now_ = ros::Time(0);
-    listener_.waitForTransform("dory/base_link", "dory/camera_link",now_, ros::Duration(10));
-    listener_.lookupTransform("dory/base_link", "dory/camera_link", now_, cam_in_base_);
+    listener_.waitForTransform("base_link", "camera_link",now_, ros::Duration(10));
+    listener_.lookupTransform("base_link", "camera_link", now_, cam_in_base_);
     }
         catch (tf::TransformException &ex) {
       ROS_ERROR("%s",ex.what());
