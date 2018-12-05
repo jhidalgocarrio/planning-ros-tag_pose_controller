@@ -61,27 +61,27 @@ void TagPoseControllerNode::TagPoseCallBack(const apriltags2_ros::AprilTagDetect
 	if (fabs(measured_distance - desired_distance_) < 0.1)
 	{
 
-	    ROS_INFO("Tag Within %f Range", fabs(measured_distance - desired_distance_));
-	    cmd_vel_.linear.x  = 0.0;
-	    cmd_vel_.linear.y  = 0.0;
-	    cmd_vel_.linear.z  = 0.0;
-	    cmd_vel_.angular.x = 0.0;
-	    cmd_vel_.angular.y = 0.0;
-	    cmd_vel_.angular.z = 0.0;
+		ROS_INFO("Tag Within %f Range", fabs(measured_distance - desired_distance_));
+		cmd_vel_.linear.x  = 0.0;
+		cmd_vel_.linear.y  = 0.0;
+		cmd_vel_.linear.z  = 0.0;
+		cmd_vel_.angular.x = 0.0;
+		cmd_vel_.angular.y = 0.0;
+		cmd_vel_.angular.z = control_signal_angular;
 	}
 	else
 	{
 	 
-	    ROS_INFO("Tag OUT of Range");
+		ROS_INFO("Tag OUT of Range");
 		cmd_vel_.linear.x  = control_signal_linear;
 		cmd_vel_.linear.y  = 0.0;
    		cmd_vel_.linear.z  = 0.0;
     		cmd_vel_.angular.x = 0.0;
    	 	cmd_vel_.angular.y = 0.0;
     		cmd_vel_.angular.z = control_signal_angular;
-
-    		cmd_vel_publisher_.publish(cmd_vel_);
 	}
+
+	cmd_vel_publisher_.publish(cmd_vel_);
 
 }
     else{
