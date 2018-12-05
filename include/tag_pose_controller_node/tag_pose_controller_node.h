@@ -9,6 +9,7 @@
 #include <geometry_msgs/Pose.h>
 #include <geometry_msgs/Twist.h>
 #include <eigen3/Eigen/Core>
+#include <string>
 #include <cmath>
 class TagPoseControllerNode {
 
@@ -42,6 +43,7 @@ private:
     //user defined setpoints
     double desired_distance_;
     double desired_angle_;
+    std::string output_port_name_;
 
     //output
     geometry_msgs::Twist cmd_vel_;

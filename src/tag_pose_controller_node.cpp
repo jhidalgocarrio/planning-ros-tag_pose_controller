@@ -126,6 +126,8 @@ TagPoseControllerNode::TagPoseControllerNode() :
 
     private_nh_.param("desired_distance", desired_distance_, 1.3);
     private_nh_.param("desired_angle", desired_angle_, 0.0);
+    private_nh_.param("output_port_name", output_port_name_, std::string("cmd_vel"));
+
 
     controller_linear_.setParams(Kp_, Ki_, Kd_, upper_, lower_, sampling_time_, scaling_factor_);
     controller_angular_.setParams(Kp_ang_, Ki_ang_, Kd_ang_, upper_ang_, lower_ang_, sampling_time_ang_, scaling_factor_ang_);
@@ -137,7 +139,7 @@ TagPoseControllerNode::~TagPoseControllerNode(){}
 bool TagPoseControllerNode::spin(){
 
     tag_pose_subscriber_ =  private_nh_.subscribe("/tag_detections", 1000, &TagPoseControllerNode::TagPoseCallBack, this );
-    cmd_vel_publisher_   =  private_nh_.advertise<geometry_msgs::Twist>("spacenav/cmd_vel", 10);
+    cmd_vel_publisher_   =  private_nh_.advertise<geometry_msgs::Twist>(output_port_name_, 10);
 
     while (private_nh_.ok())
     {
