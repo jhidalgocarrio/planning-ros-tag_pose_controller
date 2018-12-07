@@ -19,4 +19,4 @@ scaling_factor_ang: 1.0
 #common parameters
 desired_distance: 1.4
 desired_angle: 0.0 #0.1
-output_port_name: "spacenav/cmd_vel"
+output_port_name: "visual_servoing/cmd_vel"
